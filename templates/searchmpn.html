@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+
+{% block body  %} 
+
+
+    
+
+<div class="container-fluid">
+    <h1>Search BY MPN</h1>   
+    {% from "includes/_formhelpers.html" import render_field %}
+      <form method='POST' action=''>
+          <div class='form-group row'>
+              <div class="col-xs-2">{{render_field(form.productid,class_="form-control")}}</div>
+              
+          </div>
+          <p><input type="submit" class="btn btn-primary" name="" value="SEARCH"> </p> 
+
+   
+</form> 
+  </div>
+      
+      
+       
+     
+{% endblock  %}
