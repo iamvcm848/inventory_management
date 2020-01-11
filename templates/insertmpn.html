@@ -17,17 +17,18 @@
                       </div>
                       
                   </div>
-                  <p><input type="submit" class="btn btn-primary" name="" value="INSERT"> </p> 
-        
+                  <p id="vcm">{{msg}}</p>
+                  <p><input type="submit" id="x1"  class="btn btn-primary" name="" value="INSERT"> </p> 
+                  
            
         </form> 
-        {%with messages= get_flashed_messages() %}
-        {% if messages %}
-           {% for message in messages %}
-             <h2>{{message}}</h2>
-             {% endfor %}
-             {% endif %}
-             {% endwith %}
+       <script >
+      document.getElementById("x1").addEventListener("mouseout",myFunction)
+        function myFunction() {
+          var txt=document.getElementById("vcm").innerText;
+          alert(txt);
+        }
+        </script>
           </div>
               
 

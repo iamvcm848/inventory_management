@@ -1,19 +1,16 @@
 from flask import Flask,render_template,flash,redirect,url_for,session,logging,request
+from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+import psycopg2
 from wtforms import Form,StringField,TextAreaField,validators,SelectField,IntegerField,FloatField
 app=Flask(__name__)
-app.secret_key = "12345"
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'inventory'  
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-# Intialize MySQL
-mysql = MySQL(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] =  'postgresql://postgres:1234@localhost/userdata'
+mysql = SQLAlchemy(app)
 
 @app.route('/')
 def hell():
@@ -41,6 +38,7 @@ class AttribForm(Form):
 class InsertMPNForm(Form):
     productid=StringField('MPN',[validators.Length(min=1,max=50),validators.required()])
     no=IntegerField('Quantity',[validators.required()])
+
 
 
 @app.route('/insert',methods=['GET','POST'])
@@ -131,31 +129,35 @@ def sattrib():
 
 @app.route('/insertmpn',methods=['GET','POST'])
 def impn():
+    message=""
     form=InsertMPNForm(request.form)
     if request.method=='POST' and form.validate():
         productid=form.productid.data
         no=form.no.data
         cursor = mysql.connection.cursor()
         result=cursor.execute('SELECT * FROM data1 WHERE productid = %s',[ productid])
+        
         if result>0:
             numberdata=cursor.fetchone()
-            qty=numberdata["quantity"]
-            
+            qty=numberdata["quantity"]         
             sum1=no+qty
             no=sum1
             sql = "UPDATE data1 SET quantity=%s WHERE productid=%s"
             data = (no,productid)
+            message="Updated Successfully !"
             cursor.execute(sql, data)
             mysql.connection.commit()
-            flash('Updated Successfully !')
+            
+            
                  
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            flash('MPN Doesnt EXISTS')
-            cursor.close()
+            message="MPN DOESNT EXIST"
+            
     elif request.method == 'POST':
-        msg = 'Please fill out the form!'
-    return render_template('insertmpn.html',form=form)
+        hello=''
+    
+    return render_template('insertmpn.html',form=form,msg=message)
 
  
 

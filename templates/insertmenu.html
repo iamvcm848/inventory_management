@@ -4,33 +4,24 @@
 {% block body  %} 
 
 
-     
-
-
-
-
-
       <h1>INSERT </h1> <BR>
       <H3>INSERT By :</H3>  
-    
-      <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          SELECT 
-        </a>
-      
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-          <a class="dropdown-item" href="/insertmpn">MPN</a>
-          <a class="dropdown-item" href="/insert">Manually</a>
-        </div>
-      </div>
 
-   
-       
+      <button type="button" onclick="myFunction()" class="btn btn-primary">MPN</button>
+      <button type="button" onclick="myFunction1()" class="btn btn-primary">ATTRIBUTES</button>
+
+<script>
+function myFunction() {
+  window.open("insertmpn","POPUP","width=900,height=400");
+}
+function myFunction1() {
+  window.open("insert","POPUP","width=1000,height=550");
+}
+</script>
+      
 
 <br><br>
    
 </form>  
-       
-     
-     
+         
 {% endblock  %}
