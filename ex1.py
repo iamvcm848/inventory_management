@@ -34,7 +34,7 @@ class InsertForm(Form):
 
 class AttribForm(Form):
     package=StringField('Package',[validators.Length(min=4,max=25),validators.required()])
-    value=FloatField('Value',[validators.required(),validators.required()])
+    value=FloatField('Value',[validators.required()])
     units=StringField('Units',[validators.Length(min=3,max=5),validators.required()])
     types=StringField('Types',[validators.Length(min=4,max=25),validators.required()])
 
@@ -81,19 +81,53 @@ def search():
 def insertmenu():
     return render_template('insertmenu.html')
 
-@app.route('/searchMPN')
+@app.route('/searchMPN',methods=['GET','POST'])
 def smpn():
+    numberdata={}
     form=SearchForm(request.form)
-    if request.method=='POST' and form.validate():
-        return render_template('searchmpn.html')
-    return render_template('searchmpn.html',form=form)
+    if request.method=='POST' and form.validate(): 
+        productid=form.productid.data
+        cursor = mysql.connection.cursor()
+        result=cursor.execute('SELECT * FROM data1 WHERE productid = %s ',[ productid])
+        if result>0:
+            numberdata=cursor.fetchone()
+            mysql.connection.commit()
+                 
+        else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            flash('MPN Doesnt EXISTS')
+            cursor.close()
+    elif request.method == 'POST':
+        print('hello world')
+        
+    return render_template('searchmpn.html',form=form,nd=numberdata)
 
 @app.route('/srcattrib',methods=['GET','POST'])
 def sattrib():
+    numberdata={}
     form=AttribForm(request.form)
     if request.method=='POST' and form.validate():
-        return render_template('srcattrib.html')
-    return render_template('srcattrib.html',form=form)
+        package=form.package.data
+        value=form.value.data
+        units=form.units.data
+        types=form.types.data
+        cursor = mysql.connection.cursor()
+        result=cursor.execute('SELECT * FROM data1 WHERE package = %s and value=%s and units=%s and types=%s',[ package,value,units,types])
+        if result>0:
+            numberdata=cursor.fetchone()
+            mysql.connection.commit()
+            return render_template('srcattrib.html',form=form,nd=numberdata)
+            
+                 
+        else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            flash('PRODUCT DOESNT EXISTS')
+            cursor.close()
+    elif request.method == 'POST':
+        print('hello world')
+        
+    return render_template('srcattrib.html',form=form,nd=numberdata)
+        
 
 @app.route('/insertmpn',methods=['GET','POST'])
 def impn():

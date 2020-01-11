@@ -7,27 +7,39 @@
        <div class="container-fluid">
         <h1>Insert</h1>   
       {% from "includes/_formhelpers.html" import render_field %}
-       <form method='POST' action="">
-              <div class='form-group row'>
-                  <div class="col-xs-2">
-                    {{render_field(form.productid,class_="form-control")}}  <br>
-                    {{render_field(form.package,class_="form-control")}}<br>
-                    {{render_field(form.value,class_="form-control")}}  <br>
-                    {{render_field(form.units,class_="form-control")}}<br>
-                    {{render_field(form.types,class_="form-control")}}<br>
-                    {{render_field(form.no,class_="form-control")}}<br>
-                    {{render_field(form.id,class_="form-control")}}    <br>              
-                    </div>
-            
-                      </div>
-                   
-                    
-                      
+       
 
-                  
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm-2"> </div>                    
+  
+                  <div class="col-sm-5">
+                    <form method='POST' action="">
+                      <div class='form-group'>
+                         
+                            {{render_field(form.productid,class_="form-control")}}  <br>
+                            {{render_field(form.package,class_="form-control")}}<br>
+                            {{render_field(form.value,class_="form-control")}}  <br>
+                            {{render_field(form.units,class_="form-control")}}<br>
+                            {{render_field(form.types,class_="form-control")}}<br>
+                            {{render_field(form.no,class_="form-control")}}<br>
+                            {{render_field(form.id,class_="form-control")}}    <br>              
+                          
+                              </div>   
+                              <center><input type="submit" class="btn btn-primary" name="" value="Submit"> </center>
+                              </form>  
+                  </div>
+                  <div class="col-sm-5">
+                    {%with messages= get_flashed_messages() %}
+                    {% if messages %}
+                       {% for message in messages %}
+                         <h2>{{message}}</h2>
+                         {% endfor %}
+                         {% endif %}
+                         {% endwith %}
+                  </div>
+                </div>
               </div>
-              
-              <p><input type="submit" class="btn btn-primary" name="" value="Submit"> </p>
     
        
     </form> 

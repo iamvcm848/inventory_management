@@ -7,17 +7,73 @@
     
 
 <div class="container-fluid">
-    <h1>Search BY MPN</h1>   
+     
     {% from "includes/_formhelpers.html" import render_field %}
-      <form method='POST' action=''>
-          <div class='form-group row'>
-              <div class="col-xs-2">{{render_field(form.productid,class_="form-control")}}</div>
-              
-          </div>
-          <p><input type="submit" class="btn btn-primary" name="" value="SEARCH"> </p> 
+  
 
-   
-</form> 
+<div class="container-fluid">
+         <div class="row">
+           <div class="col-sm-1"></div>
+           <div class="col-sm-4">
+            <h1>Search BY MPN</h1>  
+            <form method='POST' action=''>
+              <div class='form-group'>
+                  <div class="col-xs-2">{{render_field(form.productid,class_="form-control")}}</div>
+                  
+              </div>
+              <p><input type="submit" id="vcm" class="btn btn-primary" name="" value="SEARCH"> </p>  
+    </form> 
+    {%with messages= get_flashed_messages() %}
+    {% if messages %}
+       {% for message in messages %}
+         <h2>{{message}}</h2>
+         {% endfor %}
+         {% endif %}
+         {% endwith %}
+           </div>
+           
+           <script>
+             document.getElementById("vcm").addEventListener("click",showData);
+            function showData() {
+              var x = document.getElementById("d1");
+              if (x.style.display === "none") {
+                x.style.display = "block";
+              } else {
+                x.style.display = "none";
+              }
+            }
+            </script>
+           <div class="col-sm-6" id="d1">
+               <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>MPN</th>
+                    <th>PACKAGE</th>
+                    <th>VALUE</th>
+                    <th>UNITS</th>
+                    <th>TYPES</th>
+                    <th>QUANTITY</th>
+                    <th>ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{nd["productid"]}}</td>
+                    <td>{{nd["package"]}}</td>
+                    <td>{{nd["value"]}}</td>
+                    <td>{{nd["units"]}}</td>
+                    <td>{{nd["types"]}}</td>
+                    <td>{{nd["quantity"]}}</td>
+                    <td>{{nd["identifier"]}}</td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+                 
+           </div>
+         </div>
+</div>
+
   </div>
       
       
