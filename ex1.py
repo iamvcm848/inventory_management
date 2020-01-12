@@ -4,18 +4,33 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 import psycopg2
-from wtforms import Form,StringField,TextAreaField,validators,SelectField,IntegerField,FloatField
+from wtforms import Form,StringField,validators,SelectField,IntegerField,FloatField
 app=Flask(__name__)
 app.secret_key = "12345"
 
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#app.config['SQLALCHEMY_DATABASE_URI'] =  'postgresql://postgres:1234@localhost/userdata'
-#mysql = SQLAlchemy(app)  
- 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:1234@localhost/inventory'
+db= SQLAlchemy(app)  
+
+class data(db.Model):
+    productid=db.Column(db.String(50),primary_key=True)
+    package=db.Column(db.String(50))
+    value=db.Column(db.String(10))
+    units=db.Column(db.String(10))
+    types=db.Column(db.String(20))
+    quantity=db.Column(db.Integer)
+    id=db.Column(db.String(50))
+    def __init__(self,productid,package,value,units,types,quantity,id):
+        self.productid=productid
+        self.package=package
+        self.value=value
+        self.units=units
+        self.types=types
+        self.quantity=quantity
+        self.id=id
 
 @app.route('/')
 def hell():
-    flash('USER ALREADY EXISTS')
     return render_template('home.html')
 
 class SearchForm(Form):
@@ -25,15 +40,15 @@ class InsertForm(Form):
     productid=StringField('MPN',[validators.Length(min=1,max=50),validators.required()])
     package=StringField('Package',[validators.Length(min=4,max=25),validators.required()])
     value=FloatField('Value',[validators.required()])
-    units=StringField('Units',[validators.Length(min=3,max=5),validators.required()])
+    units=SelectField( 'UNITS', choices=[('','---select---'),('FARAD', 'FARAD'), ('OHMS', 'OHMS'), ('JOULES', 'JOULES')]  )
     types=StringField('Types',[validators.Length(min=4,max=25),validators.required()])
     no=IntegerField('Quantity',[validators.required(),validators.required()])
-    id=StringField('ID',[validators.Length(min=4,max=25),validators.required()])
+    id=SelectField( 'UNITS', choices=[('','---select---'),('RESISTOR', 'RESISTOR'), ('CAPACITOR', 'CAPACITOR'), ('IC', 'IC')]  )
 
 class AttribForm(Form):
     package=StringField('Package',[validators.Length(min=4,max=25),validators.required()])
-    value=FloatField('Value',[validators.required()])
-    units=StringField('Units',[validators.Length(min=3,max=5),validators.required()])
+    value=StringField('Value',[validators.required()])
+    units=SelectField( 'UNITS', choices=[('','---select---'),('FARAD', 'FARAD'), ('OHMS', 'OHMS'), ('JOULES', 'JOULES')]  )
     types=StringField('Types',[validators.Length(min=4,max=25),validators.required()])
 
 class InsertMPNForm(Form):
@@ -54,24 +69,12 @@ def insert():
         types=form.types.data
         no=form.no.data
         id=form.id.data
-        try:
-            connection = psycopg2.connect(user="postgres",password="1234",host="127.0.0.1", port="5432",database="inventory")
-            cursor = connection.cursor()           
-            cursor.execute("INSERT INTO data(productid,package,value,units,type,quantity,id) VALUES (%s,%s,%s,%s,%s,%s,%s)",[productid,package,value,units,types,no,id])
-            connection.commit()
-            message='RECORD SUCCESSFULLY ADDED !'
-        
-        except (Exception, psycopg2.Error) as error :
-            if(connection):
-                print("Failed to insert record into mobile table", error)
-        
-        finally:
-            if(connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed")         
+        me=data(productid,package,value,units,types,no,id)
+        db.session.add(me)     
+        db.session.commit()
+        message='ADDED SUCCESSFULLY !!'   
     elif request.method == 'POST':
-        msg = 'Please fill out the form!'
+        print('')
     return render_template('insert.html',form=form,msg=message)
 
 
@@ -85,32 +88,16 @@ def insertmenu():
 
 @app.route('/searchMPN',methods=['GET','POST'])
 def smpn():
+    result=[]
     message=''
-    result=()
     form=SearchForm(request.form)
     if request.method=='POST' and form.validate(): 
         pd=form.productid.data
-        try:
-            connection = psycopg2.connect(user="postgres",password="1234",host="127.0.0.1", port="5432",database="inventory")
-            cursor = connection.cursor()
-            cursor.execute('SELECT * FROM data WHERE productid = %s',[pd])
-            result=cursor.fetchone()
-            if result:
-                    
-                connection.commit()      
-            else:
-                message='MPN doesnt exist !'
-                cursor.close()
-    
-        except (Exception, psycopg2.Error) as error :
-            if(connection):
-                print("Failed to insert record into mobile table", error)
-        
-        finally:
-            if(connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed")    
+        result=data.query.filter_by(productid=pd).first()
+        if result:
+            message='DATA AVAILABLE'
+        else:
+            message='MPN doesnt EXIST'         
     elif request.method == 'POST':
         print('hello world')
         
@@ -118,35 +105,20 @@ def smpn():
 
 @app.route('/srcattrib',methods=['GET','POST'])
 def sattrib():
-    result=()
+    result=[]
     message=''
     form=AttribForm(request.form)
     if request.method=='POST' and form.validate():
-        package=form.package.data
-        value=form.value.data
-        vl1=str(value)
-        units=form.units.data
-        types=form.types.data
-        try:
-            connection = psycopg2.connect(user="postgres",password="1234",host="127.0.0.1", port="5432",database="inventory")
-            cursor = connection.cursor()
-            cursor.execute('SELECT * FROM data WHERE package = %s and value=%s and units=%s and type=%s',[package,vl1,units,types])
-            result=cursor.fetchone()
-            if result:  
-                connection.commit()      
-            else:
-                message='MPN Doesnt Exist'
-                cursor.close()
-    
-        except (Exception, psycopg2.Error) as error :
-            if(connection):
-                print("Failed to insert record into mobile table", error)
-        
-        finally:
-            if(connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed") 
+        pg=form.package.data
+        v=form.value.data
+        vl1=str(v)
+        u=form.units.data
+        t=form.types.data
+        result=data.query.filter_by(package=pg,value=vl1,units=u,types=t).first()
+        if result:
+            message='DATA AVAILABLE'
+        else:
+            message='PRODUCT DOESNT EXIST !'
     elif request.method == 'POST':
         print('hello world')
         
@@ -155,43 +127,24 @@ def sattrib():
 
 @app.route('/insertmpn',methods=['GET','POST'])
 def impn():
-    message=""
+    message=''
+    result=[]
     form=InsertMPNForm(request.form)
     if request.method=='POST' and form.validate():
         pd=form.productid.data
         no=form.no.data
-        try:
-            connection = psycopg2.connect(user="postgres",password="1234",host="127.0.0.1", port="5432",database="inventory")
-            cursor = connection.cursor()
-            cursor.execute('SELECT * FROM data WHERE productid = %s',[pd])
-            result=cursor.fetchone()
-            if result:
-                res=no+result[5]
-                sql = "UPDATE data SET quantity=%s WHERE productid=%s"
-                data = (res,pd)
-                cursor.execute(sql, data)  
-                message='SUCCESSFULLY ADDED !'   
-                connection.commit()      
-            else:
-                message='MPN doesnt exist'
-                cursor.close()
-    
-        except (Exception, psycopg2.Error) as error :
-            if(connection):
-                print("Failed to insert record into mobile table", error)
-        
-        finally:
-            if(connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed")    
-            
+        result=data.query.filter_by(productid=pd).first()
+        if result:
+            sums=no+result.quantity
+            result.quantity=sums
+            db.session.commit()
+            message='DATA ADDED SUCCESSFULLY !'
+        else:
+            message='MPN doesnt EXIST'       
     elif request.method == 'POST':
         hello=''   
     return render_template('insertmpn.html',form=form,msg=message)
 
  
-
-
 if __name__=='__main__':
     app.run(debug=True)

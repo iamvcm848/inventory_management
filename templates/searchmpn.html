@@ -3,14 +3,10 @@
 
 {% block body  %} 
 
-
-    
-
 <div class="container-fluid">
      
     {% from "includes/_formhelpers.html" import render_field %}
   
-
 <div class="container-fluid">
          <div class="row">
            <div class="col-sm-1"></div>
@@ -32,11 +28,8 @@
           alert(txt);
         }
         </script>
-        
-
            </div>
-           
-         
+            
            <div class="col-sm-6" id="d1">
                <table class="table table-striped">
                 <thead>
@@ -52,13 +45,13 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{nd[0]}}</td>
-                    <td>{{nd[1]}}</td>
-                    <td>{{nd[2]}}</td>
-                    <td>{{nd[3]}}</td>
-                    <td>{{nd[4]}}</td>
-                    <td>{{nd[5]}}</td>
-                    <td>{{nd[6]}}</td>
+                    <td>{{nd.productid}}</td>
+                    <td>{{nd.package}}</td>
+                    <td>{{nd.value}}</td>
+                    <td>{{nd.units}}</td>
+                    <td>{{nd.types}}</td>
+                    <td>{{nd.quantity}}</td>
+                    <td>{{nd.id}}</td>
                   </tr>
                  
                 </tbody>
@@ -68,9 +61,5 @@
          </div>
 </div>
 
-  </div>
-      
-      
-       
-     
+  </div>   
 {% endblock  %}

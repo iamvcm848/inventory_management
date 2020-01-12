@@ -10,12 +10,16 @@
 
        <div class="container-fluid">
       {% from "includes/_formhelpers.html" import render_field %}
-    
+      <style>
+        #abc{
+          background-color: aqua;
+        }
+      </style> 
 
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-1"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" id="abc">
           <h1>Search By Attributes</h1>    
          <form method='POST' action=''>
           <div class='form-group row'>
@@ -55,13 +59,13 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{nd[0]}}</td>
-                <td>{{nd[1]}}</td>
-                <td>{{nd[2]}}</td>
-                <td>{{nd[3]}}</td>
-                <td>{{nd[4]}}</td>
-                <td>{{nd[5]}}</td>
-                <td>{{nd[6]}}</td>
+                <td>{{nd.productid}}</td>
+                    <td>{{nd.package}}</td>
+                    <td>{{nd.value}}</td>
+                    <td>{{nd.units}}</td>
+                    <td>{{nd.types}}</td>
+                    <td>{{nd.quantity}}</td>
+                    <td>{{nd.id}}</td>
               </tr>
              
             </tbody>
