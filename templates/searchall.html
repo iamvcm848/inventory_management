@@ -1,0 +1,49 @@
+{% extends 'layout1.html' %}
+
+
+{% block body  %} 
+
+<div class="container-fluid">
+     
+    {% from "includes/_formhelpers.html" import render_field %}
+  
+<div class="container-fluid">
+         <div class="row">
+           <div class="col-sm-1"></div>
+           
+           <div class="col-sm-6" id="d1">
+               <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>MPN</th>
+                    <th>PACKAGE</th>
+                    <th>VALUE</th>
+                    <th>UNITS</th>
+                    <th>TYPES</th>
+                    <th>QUANTITY</th>
+                    <th>ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for nd1 in nd %}
+                  <tr>
+                    <td>{{nd1.productid}}</td>
+                    <td>{{nd1.package}}</td>
+                    <td>{{nd1.value}}</td>
+                    <td>{{nd1.units}}</td>
+                    <td>{{nd1.types}}</td>
+                    <td>{{nd1.quantity}}</td>
+                    <td>{{nd1.id}}</td>
+                  </tr>
+                  {% endfor %}
+                 
+                </tbody>
+              </table>
+                 
+           </div>
+           <div class="col-sm-3"></div>
+         </div>
+</div>
+
+  </div>   
+{% endblock  %}

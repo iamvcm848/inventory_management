@@ -123,6 +123,18 @@ def sattrib():
         print('hello world')
         
     return render_template('srcattrib.html',form=form,nd=result,msg=message)
+
+@app.route('/searchall',methods=['GET','POST'])
+def srcall():
+    message=''
+    result=[]
+    result=data.query.filter_by().all()
+    if result:
+        message='data displayed successfully !'
+    else:
+        message='database empty !'
+    return render_template('searchall.html',nd=result,msg=message)
+
         
 
 @app.route('/insertmpn',methods=['GET','POST'])

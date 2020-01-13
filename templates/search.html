@@ -6,20 +6,24 @@
   #dv1{
     background-color:#FFA500;
     background-size: cover;
+    padding: 100px;
+    border-style: dashed;
+    border-color:brown;
 }
 </style>
-
-      <div class="container-fluid" id="dv1">
+<br>
+      <div class="container-fluid" >
         <div class="row">
           <div class="col-sm-4" >
       
           </div>
-          <div class="col-sm-7">
-            <br><br><br><br><br><br><br>
+          <div class="col-sm-3" id="dv1">
+            <br>
             <h2>Search By :</h2>   
         
-            <button type="button" onclick="myFunction()" class="btn btn-primary">MPN</button>
-            <button type="button" onclick="myFunction1()" class="btn btn-primary">ATTRIBUTES</button>
+            <button type="button" onclick="myFunction()" class="btn btn-primary">MPN</button><br><br>
+            <button type="button" onclick="myFunction1()" class="btn btn-primary">ATTRIBUTES</button><br><br>
+            <button type="button" onclick="myFunction2()" class="btn btn-primary">INVENTORY DATA</button>
           </div>
           <div class="col-sm-5"> 
           </div>
@@ -33,10 +37,13 @@
 
 <script>
 function myFunction() {
-  window.open("searchMPN","POPUP","width=900,height=400");
+  window.open("searchMPN","POPUP","width=950,height=400");
 }
 function myFunction1() {
   window.open("srcattrib","POPUP","width=1000,height=550");
+}
+function myFunction2() {
+  window.open("searchall","POPUP","width=800,height=300");
 }
 </script>
 

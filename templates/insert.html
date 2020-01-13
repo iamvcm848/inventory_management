@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'layout1.html' %}
 
 
 {% block body  %} 
@@ -8,32 +8,34 @@
   }
 </style>
 
-       <div class="container-fluid" id="abc">
-        <h1>Insert</h1>   
+       <div class="container-fluid" id="abc"> 
       {% from "includes/_formhelpers.html" import render_field %}
        
 
               <div class="container-fluid">
                 <div class="row">
-                  <div class="col-sm-2"> </div>                    
+                  <div class="col-sm-4">
+                    <br><br>
+                    <br><br>
+                    <h1>Insert</h1>  
+                     </div>                    
   
-                  <div class="col-sm-5">
+                  <div class="col-sm-3"  >
                     <form method='POST' action="">
                       <div class='form-group'>
                          
-                            {{render_field(form.productid,class_="form-control")}}  <br>
-                            {{render_field(form.package,class_="form-control")}}<br>
-                            {{render_field(form.value,class_="form-control")}}  <br>
-                            {{render_field(form.units,class_="form-control")}}<br>
-                            {{render_field(form.types,class_="form-control")}}<br>
-                            {{render_field(form.no,class_="form-control")}}<br>
-                            {{render_field(form.id,class_="form-control")}}    <br>              
+                            {{render_field(form.productid,class_="form-control")}} 
+                            {{render_field(form.package,class_="form-control")}}
+                            {{render_field(form.value,class_="form-control")}}  
+                            {{render_field(form.units,class_="form-control")}}
+                            {{render_field(form.types,class_="form-control")}}
+                            {{render_field(form.no,class_="form-control")}}
+                            {{render_field(form.id,class_="form-control")}}                  
                           
                               </div>   
-                              <p id="vcm" hidden="true">{{msg}}</p>
                               <center><input type="submit" id="x1" class="btn btn-primary" name="" value="Submit"> </center>
                               </form>  
-
+                              <p id="vcm" hidden="true">{{msg}}</p>
                               <script >
                                 document.getElementById("x1").addEventListener("mouseout",myFunction)                              
                                   function myFunction() {

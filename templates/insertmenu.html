@@ -6,20 +6,23 @@
   #dv1{
     background-color:#FFA500;
     background-size: cover;
+    padding: 100px;
+    border-style: dashed;
+    border-color:brown;
 }
 </style>
 
-
-<div class="container-fluid" id="dv1">
+<br><br>
+<div class="container-fluid" >
   <div class="row">
     <div class="col-sm-4">
 
     </div>
-    <div class="col-sm-7">
-      <br><br><br><br><br><br><br>
+    <div class="col-sm-3" id="dv1">
+      <br>
       <h2>INSERT By :</h2>   
   
-        <button type="button" onclick="myFunction()" class="btn btn-primary">MPN</button>
+        <button type="button" onclick="myFunction()" class="btn btn-primary">MPN</button><br><br>
         <button type="button" onclick="myFunction1()" class="btn btn-primary">ATTRIBUTES</button>
     </div>
     <div class="col-sm-5">
@@ -28,15 +31,12 @@
   </div>
 </div>
 
-
-
-
 <script>
 function myFunction() {
-  window.open("insertmpn","POPUP","width=900,height=400");
+  window.open("insertmpn","POPUP","width=400,height=400");
 }
 function myFunction1() {
-  window.open("insert","POPUP","width=1000,height=550");
+  window.open("insert","POPUP","width=1000,height=575");
 }
 </script>
       
