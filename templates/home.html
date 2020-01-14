@@ -1,14 +1,45 @@
-{% extends 'layout.html' %}
+{% extends 'layout1.html' %}
 
 
 {% block body  %} 
-<div class="jumbotron jumbotron-fluid">
+<!--<div class="jumbotron jumbotron-fluid">
       <div class="container">
             <center>
                   <h1>Mrinq Technologies</h1>
                   <p>...................WELCOME...................</p>
             </center>
      
-      </div>
-    </div>
+      </div>   
+    </div>-->
+  <div class="container-fluid">
+        <div class="row">
+              <div class="col-sm-3">  </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-5">
+                  <center><h1>LOGIN</h1></center>
+                  <form method='POST' action="">
+                    {% from "includes/_formhelpers.html" import render_field %}
+                    <div class='form-group'>                     
+                          {{render_field(form.username,class_="form-control")}} <br> 
+                          {{render_field(form.password,class_="form-control")}}<br>                             
+                            </div>   
+                            <center><input type="submit"  class="btn btn-primary" name="" value="LOGIN"> </center>
+                            </form>  
+
+<br><br><br>
+                            <center><input type="submit" onclick="myFunction()"  class="btn btn-primary" name="" value="Register User ?"> </center>
+              </div>
+        </div>
+
+<script>
+     function myFunction() {
+      window.open("register","POPUP","width=400,height=400");
+    }  
+
+</script>
+
+
+  </div>
+
+
 {% endblock  %}

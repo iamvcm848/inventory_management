@@ -4,8 +4,11 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 import psycopg2
-from wtforms import Form,StringField,validators,SelectField,IntegerField,FloatField
+from wtforms import Form,StringField,validators,SelectField,IntegerField,FloatField,PasswordField
 import xlrd
+from mttkinter import mtTkinter as tk 
+from tkinter import messagebox
+
 
 app=Flask(__name__)
 app.secret_key = "12345"
@@ -32,38 +35,103 @@ class partdata(db.Model):
         self.unit_price=unit_price
         self.total_price=total_price
 
-@app.route('/')
-def hell():
-    return render_template('home.html')
+class userdata(db.Model):
+    username=db.Column(db.String(25),primary_key=True)
+    email=db.Column(db.String(50))
+    password=db.Column(db.String(50))
+    name=db.Column(db.String(400))
+    def __init__(self,username,email,password,name):
+        self.username=username
+        self.email=email
+        self.password=password
+        self.name=name
+
+
+@app.route('/',methods=['GET','POST'])
+def log():
+    message=''
+    print('aaaaa')
+    form=LogIn(request.form)
+    print('bbbbb')
+    if request.method=='POST' and form.validate():
+        print('cccc')
+        un=form.username.data
+        print('dddd')
+        pw=form.password.data
+        print('eeee')
+        result=userdata.query.filter_by(username=un,password=pw).first()
+        print('fffff')
+        if result:
+            print('hello world')
+            message='successfull login'
+            return redirect(url_for('dash'))
+        else:
+            print('bye world')
+            message='login credentials didnt match !'
+    return render_template('home.html',form=form)
+    
+class LogIn(Form):
+    username=StringField('USERNAME',[validators.Length(min=1,max=50),validators.DataRequired()])
+    password=PasswordField('PASSWORD', [validators.DataRequired()])
+class RegisterUser(Form):
+    name=StringField('NAME',[validators.Length(min=1,max=50)])
+    email=StringField('EMAIL',[validators.Length(min=1,max=50)])
+    username=StringField('USERNAME',[validators.Length(min=1,max=50)])
+    password = PasswordField('PASSWORD', [validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')])
+    confirm  = PasswordField('REPEAT PASSWORD')
+    
 
 class SearchForm(Form):
-    mpn=StringField('MPN',[validators.Length(min=1,max=50),validators.required()])
+    mpn=StringField('MPN',[validators.Length(min=1,max=50)])
 
 class InsertForm(Form):
-    mpn=StringField('MPN',[validators.Length(min=1,max=50),validators.required()])
-    part_no=StringField('PART NO',[validators.Length(min=4,max=25),validators.required()])
+    mpn=StringField('MPN',[validators.Length(min=1,max=50)])
+    part_no=StringField('PART NO',[validators.Length(min=4,max=25)])
     desc=StringField('DESCRIPTION',[validators.Length(min=4,max=200)])
-    no=IntegerField('QUANTITY',[validators.required(),validators.required()])
-    up=StringField('UNIT PRICE',[validators.Length(min=2,max=10),validators.required()])
-    tp=StringField('TOTAL PRICE',[validators.Length(min=2,max=10),validators.required()])
+    no=IntegerField('QUANTITY',[validators.DataRequired()])
+    up=StringField('UNIT PRICE',[validators.Length(min=2,max=10)])
+    tp=StringField('TOTAL PRICE',[validators.Length(min=2,max=10)])
   
 
 class AttribForm(Form): 
-    part_no=StringField('PART NO',[validators.Length(min=4,max=25),validators.required()])
+    part_no=StringField('PART NO',[validators.Length(min=4,max=25)])
 
 class InsertMPNForm(Form):
-    mpn=StringField('MPN',[validators.Length(min=1,max=50),validators.required()])
-    no=IntegerField('QUANTITY',[validators.required()])
+    mpn=StringField('MPN',[validators.Length(min=1,max=50)])
+    no=IntegerField('QUANTITY',[validators.DataRequired()])
 
 class PathForm(Form):
-    pathname=StringField('FILE PATH',[validators.Length(min=5,max=50),validators.required()])
+    pathname=StringField('FILE PATH',[validators.Length(min=5,max=50)])
 
 class PathForm1(Form):
-    pathname1=StringField('FILE PATH',[validators.Length(min=5,max=50),validators.required()])
+    pathname1=StringField('FILE PATH',[validators.Length(min=5,max=50)])
 
 class PathForm2(Form):
-    pathname2=StringField('FILE PATH',[validators.Length(min=5,max=50),validators.required()])
-    qty=IntegerField('ENTER THE NO. OF BOMS',[validators.required()])
+    pathname2=StringField('FILE PATH',[validators.Length(min=5,max=50)])
+    qty=IntegerField('ENTER THE NO. OF BOMS',[validators.DataRequired()])
+
+@app.route('/dashboard',methods=['GET','POST'])
+def dash():
+    return render_template('dashboard.html')   
+
+
+@app.route('/register',methods=['GET','POST'])
+def regd():
+    form=RegisterUser(request.form)
+    if request.method=='POST' and form.validate():
+        temp=form.username.data
+        result=userdata.query.filter_by(username=temp).first()
+        if result:
+            message='SORRY USERNAME ALREADY EXIST ! '
+        else:
+            me=userdata(form.username.data,form.email.data,form.name.data,form.password.data)
+            db.session.add(me)     
+            db.session.commit()
+            message='SORRY USERNAME ALREADY EXIST ! '
+            return redirect(url_for('log'))
+
+
+    return render_template('register.html',form=form)    
 
 
 @app.route('/importa',methods=['GET','POST'])
@@ -180,10 +248,10 @@ def smpn():
             print('hello')
         else:
             print('') 
-            #messagebox.showinfo("Title", "MPN DOESNT EXIST")       
+            messagebox.showinfo("Title", "MPN DOESNT EXIST")       
     elif request.method == 'POST':
         print('hello world')
-        
+        q
     return render_template('searchmpn.html',form=form,nd=result)
 
 @app.route('/srcattrib',methods=['GET','POST'])
@@ -241,3 +309,5 @@ def impn():
  
 if __name__=='__main__':
     app.run(debug=True)
+    
+    

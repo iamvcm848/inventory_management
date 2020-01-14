@@ -1,0 +1,39 @@
+{% extends 'layout1.html' %}
+
+
+{% block body  %} 
+
+<style>
+  #vc{
+    padding: 60px;
+  }
+</style>
+      
+
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-4">
+                  <center><h1>REGISTER USER</h1></center>
+                  <form method='POST' action="">
+                    {% from "includes/_formhelpers.html" import render_field %}
+                    <div class='form-group'>                     
+                          {{render_field(form.name,class_="form-control")}} <br>
+                          {{render_field(form.email,class_="form-control")}}<br>
+                          {{render_field(form.username,class_="form-control")}} <br> 
+                          {{render_field(form.password,class_="form-control")}}<br>
+                          {{render_field(form.confirm,class_="form-control")}}     <br>                                
+                            </div>   
+                            <center><input type="submit"  class="btn btn-primary" name="" value="REGISTER"> </center>
+                            </form>  
+              </div>
+              <div class="col-sm-2"></div>
+          </div>
+      </div>
+              
+
+    
+
+       
+     
+{% endblock  %}
