@@ -24,48 +24,37 @@
          <form method='POST' action=''>
           <div class='form-group row'>
               <div class="col-xs-2">
-                {{render_field(form.package,class_="form-control")}}
-                {{render_field(form.value,class_="form-control")}}  
-                {{render_field(form.units,class_="form-control")}}
-                {{render_field(form.types,class_="form-control")}}
+                {{render_field(form.part_no,class_="form-control")}}
+                
                 </div>
               
           </div>
-          <p id="vcm" hidden="true">{{msg}}</p>
           <p><input type="submit" id="x1" class="btn btn-primary" name="" value="Search"> </p>
    
 </form> 
-<script >
-  document.getElementById("x1").addEventListener("mouseout",myFunction)
-    function myFunction() {
-      var txt=document.getElementById("vcm").innerText;
-      alert(txt);
-    }
-    </script>
+
         </div>
        
         <div class="col-sm-6" id="d1">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>MPN</th>
-                <th>PACKAGE</th>
-                <th>VALUE</th>
-                <th>UNITS</th>
-                <th>TYPES</th>
-                <th>QUANTITY</th>
-                <th>ID</th>
+                <th>PART N0</th>
+                    <th>MPN</th>
+                    <th>DESCRIPTION</th>
+                    <th>QUANTITY</th>
+                    <th>UNIT PRICE</th>
+                    <th>TOTAL PRICE</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{{nd.productid}}</td>
-                    <td>{{nd.package}}</td>
-                    <td>{{nd.value}}</td>
-                    <td>{{nd.units}}</td>
-                    <td>{{nd.types}}</td>
+                <td>{{nd.part_no}}</td>
+                    <td>{{nd.mpn}}</td>
+                    <td>{{nd.description}}</td>
                     <td>{{nd.quantity}}</td>
-                    <td>{{nd.id}}</td>
+                    <td>{{nd.unit_price}}</td>
+                    <td>{{nd.total_price}}</td>
               </tr>
              
             </tbody>

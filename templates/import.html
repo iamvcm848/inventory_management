@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+
+{% block body  %} 
+<br>
+<br>
+
+
+
+
+       <div class="container-fluid">
+      {% from "includes/_formhelpers.html" import render_field %}
+     <br><br><br>
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-3" >
+            <button type="button" onclick="myFunction()" class="btn btn-primary">IMPORT LCSC</button><br><br>
+            <button type="button" onclick="myFunction1()" class="btn btn-primary">IMPORT DIGIKEY</button><br><br>
+            <button type="button" onclick="myFunction2()" class="btn btn-primary">EXPORT BOM</button>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>
+
+</div>
+
+<script>
+    function myFunction() {
+      window.open("importa","POPUP","width=400,height=400");
+    }
+    function myFunction1() {
+      window.open("importb","POPUP","width=400,height=400");
+    }
+    function myFunction2() {
+      window.open("exporta","POPUP","width=400,height=400");
+    }
+    </script>
+
+
+
+
+
+
+
+
+
+
+      </div>
+
+       
+
+{% endblock  %}

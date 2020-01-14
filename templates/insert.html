@@ -22,27 +22,17 @@
   
                   <div class="col-sm-3"  >
                     <form method='POST' action="">
-                      <div class='form-group'>
-                         
-                            {{render_field(form.productid,class_="form-control")}} 
-                            {{render_field(form.package,class_="form-control")}}
-                            {{render_field(form.value,class_="form-control")}}  
-                            {{render_field(form.units,class_="form-control")}}
-                            {{render_field(form.types,class_="form-control")}}
+                      <div class='form-group'>                     
+                            {{render_field(form.part_no,class_="form-control")}} 
+                            {{render_field(form.mpn,class_="form-control")}}
+                            {{render_field(form.desc,class_="form-control")}}  
                             {{render_field(form.no,class_="form-control")}}
-                            {{render_field(form.id,class_="form-control")}}                  
-                          
+                            {{render_field(form.up,class_="form-control")}}
+                            {{render_field(form.tp,class_="form-control")}}                                       
                               </div>   
                               <center><input type="submit" id="x1" class="btn btn-primary" name="" value="Submit"> </center>
                               </form>  
-                              <p id="vcm" hidden="true">{{msg}}</p>
-                              <script >
-                                document.getElementById("x1").addEventListener("mouseout",myFunction)                              
-                                  function myFunction() {
-                                    var txt=document.getElementById("vcm").innerText;         
-                                    alert(txt);
-                                  }
-                                  </script>
+                              
                   </div>
                   <div class="col-sm-5">
                   
