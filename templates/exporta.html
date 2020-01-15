@@ -12,15 +12,43 @@
 
            <div class="container-fluid" id="vc">
             <h1>Insert the path :</h1>   
-      {% from "includes/_formhelpers.html" import render_field %}
+    <div class="row">
+      <div class="col-sm-3">
+        {% from "includes/_formhelpers.html" import render_field %}
     
-                <form method='POST' action="">
-                    <div class='form-group'>                     
-                          {{render_field(form.pathname2,class_="form-control")}} 
-                          {{render_field(form.qty,class_="form-control")}}                                      
-                            </div>   
-                            <center><input type="submit"  class="btn btn-primary" name="" value="Submit"> </center>
-                            </form>   
+        <form method='POST' action="">
+            <div class='form-group'>                     
+                 {{render_field(form.pathname2,class_="form-control")}} 
+                  {{render_field(form.qty,class_="form-control")}}                                      
+                    </div>   
+                    <center><input type="submit"  class="btn btn-primary" name="" value="Submit"> </center>
+                    </form>  
+      </div>
+      <div class="col-sm-5">
+
+      </div>
+      <div class="col-sm-4">
+<h2> MPN of products with insufficient Quantity</h2>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>MPN</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for nd1 in lt %}
+            <tr>
+              <td>{{nd1}}</td>
+            </tr>
+            {% endfor %}
+           
+          </tbody>
+        </table>
+
+
+        
+      </div>
+    </div> 
         
    
           </div>

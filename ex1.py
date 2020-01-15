@@ -6,10 +6,12 @@ import re
 import psycopg2
 from wtforms import Form,StringField,validators,SelectField,IntegerField,FloatField,PasswordField
 import xlrd
-from mttkinter import mtTkinter as tk 
 from tkinter import messagebox
 
+import wx
 
+
+app1=wx.App()
 app=Flask(__name__)
 app.secret_key = "12345"
 
@@ -49,25 +51,16 @@ class userdata(db.Model):
 
 @app.route('/',methods=['GET','POST'])
 def log():
-    message=''
-    print('aaaaa')
     form=LogIn(request.form)
-    print('bbbbb')
     if request.method=='POST' and form.validate():
-        print('cccc')
         un=form.username.data
-        print('dddd')
         pw=form.password.data
-        print('eeee')
         result=userdata.query.filter_by(username=un,password=pw).first()
-        print('fffff')
         if result:
-            print('hello world')
-            message='successfull login'
+            wx.MessageBox('SUCCESSFUL LOGIN', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
             return redirect(url_for('dash'))
         else:
-            print('bye world')
-            message='login credentials didnt match !'
+            wx.MessageBox('login credentials didnt match !', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
     return render_template('home.html',form=form)
     
 class LogIn(Form):
@@ -122,12 +115,12 @@ def regd():
         temp=form.username.data
         result=userdata.query.filter_by(username=temp).first()
         if result:
-            message='SORRY USERNAME ALREADY EXIST ! '
+            wx.MessageBox('SORRY USERNAME ALREADY EXIST !', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
         else:
-            me=userdata(form.username.data,form.email.data,form.name.data,form.password.data)
+            me=userdata(form.username.data,form.email.data,form.password.data,form.name.data)
             db.session.add(me)     
             db.session.commit()
-            message='SORRY USERNAME ALREADY EXIST ! '
+            wx.MessageBox('USER ADDED SUCCESSFULLY !', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
             return redirect(url_for('log'))
 
 
@@ -136,48 +129,50 @@ def regd():
 
 @app.route('/importa',methods=['GET','POST'])
 def imp():
-    form=PathForm(request.form)
-    if request.method=='POST' and form.validate():
-        filename=form.pathname.data
-        workbook=xlrd.open_workbook(filename)
-        sheet=workbook.sheet_by_index(0)
-        for r in range(1,sheet.nrows):
-            result=partdata.query.filter_by(mpn=sheet.cell(r,1).value).first()
-            if result:
-                result.quantity=result.quantity+ int(sheet.cell(r,7).value)
-                db.session.commit()
-            else:
-                me=partdata(sheet.cell(r,0).value,sheet.cell(r,1).value,sheet.cell(r,5).value,sheet.cell(r,7).value,sheet.cell(r,9).value,sheet.cell(r,10).value)
-                db.session.add(me)     
-                db.session.commit()
-       # messagebox.showinfo('MRINQ','LCSC FILE IMPORTED SUCCESSFULLY !!') 
-    elif request.method == 'POST':
-        print('')        
-    return render_template('importa.html',form=form)
+    frame = wx.Frame(None, -1, 'win.py')
+    frame.SetDimensions(0,0,200,50)
+    filename=wx.FileSelector("Choose a file to open")
+    print(filename)
+    workbook=xlrd.open_workbook(filename)
+    sheet=workbook.sheet_by_index(0)
+    for r in range(1,sheet.nrows):
+        result=partdata.query.filter_by(mpn=sheet.cell(r,1).value).first()
+        if result:
+            result.quantity=result.quantity+ int(sheet.cell(r,7).value)
+            db.session.commit()
+        else:
+            me=partdata(sheet.cell(r,0).value,sheet.cell(r,1).value,sheet.cell(r,5).value,sheet.cell(r,7).value,sheet.cell(r,9).value,sheet.cell(r,10).value)
+            db.session.add(me)     
+            db.session.commit()
+    wx.MessageBox('LCSC FILE IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)      
+    return render_template('importa.html')
 
 @app.route('/importb',methods=['GET','POST'])
 def imp1():
-    form=PathForm1(request.form)
-    if request.method=='POST' and form.validate():
-        filename=form.pathname1.data
-        workbook=xlrd.open_workbook(filename)
-        sheet=workbook.sheet_by_index(0) 
-        for r in range(1,sheet.nrows):
-            result=partdata.query.filter_by(mpn=sheet.cell(r,3).value).first()
-            if result:
-                result.quantity=result.quantity+ int(sheet.cell(r,1).value)
-                db.session.commit()
-            else:
-                temp=int(sheet.cell(r,1).value)
-                me=partdata(sheet.cell(r,2).value,sheet.cell(r,3).value,sheet.cell(r,4).value,temp,sheet.cell(r,7).value,sheet.cell(r,8).value)
-                db.session.add(me)     
-                db.session.commit()
-       # messagebox.showinfo('MRINQ','DIGIKEY FILE IMPORTED SUCCESSFULLY !!') 
-    return render_template('importb.html',form=form)
+    frame = wx.Frame(None, -1, 'win.py')
+    frame.SetDimensions(0,0,200,50)
+    filename=wx.FileSelector("Choose a file to open")
+    print(filename)
+    workbook=xlrd.open_workbook(filename)
+    sheet=workbook.sheet_by_index(0) 
+    for r in range(1,sheet.nrows):
+        result=partdata.query.filter_by(mpn=sheet.cell(r,3).value).first()
+        if result:
+            result.quantity=result.quantity+ int(sheet.cell(r,1).value)
+            db.session.commit()
+        else:
+            temp=int(sheet.cell(r,1).value)
+            me=partdata(sheet.cell(r,2).value,sheet.cell(r,3).value,sheet.cell(r,4).value,temp,sheet.cell(r,7).value,sheet.cell(r,8).value)
+            db.session.add(me)     
+            db.session.commit()
+    wx.MessageBox('DIGIKEY FILE IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION) 
+    return render_template('importb.html')
 
 @app.route('/exporta',methods=['GET','POST'])
 def exp():
     form=PathForm2(request.form)
+    lesslist=[]
+    flag=3
     if request.method=='POST' and form.validate():
         filename=form.pathname2.data
         num=form.qty.data
@@ -188,18 +183,25 @@ def exp():
             result=partdata.query.filter_by(mpn=tempno).first()
             if result:
                 if result.quantity==0:
+                    flag=1
+                    lesslist.append(result.mpn)
                     messagebox.showinfo('MRINQ','PRODUCT HAS GOT OVER !!')      
                 else:
-                    temp=int(sheet.cell(r,0).value)
-                    temp=temp*num
-                    if (result.quantity-temp)<0:
-                        print('')
-                        #messagebox.showinfo('MRINQ','PRODUCT QUANTITY IS INSUFFICIENT !!') 
-                    else:
-                        result.quantity=result.quantity-temp
-                        db.session.commit()                
-      #  messagebox.showinfo('MRINQ','BOM CREATED SUCCESSFULLY !!')
-    return render_template('exporta.html',form=form)
+                    if flag!=1:
+                        flag=0
+                        temp=int(sheet.cell(r,0).value)
+                        temp=temp*num
+                        if (result.quantity-temp)<0:
+                            flag=1
+                            lesslist.append(result.mpn)
+                        else:
+                            if flag!=1:
+                                flag=0
+                                result.quantity=result.quantity-temp
+                                db.session.commit() 
+    if flag==0:
+        wx.MessageBox('BOM IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
+    return render_template('exporta.html',form=form,lt=lesslist)
 
 @app.route('/import',methods=['GET','POST'])
 def imp2():
@@ -221,7 +223,7 @@ def insert():
         me=partdata(part_no,mpn,desc,no,up,tp)
         db.session.add(me)     
         db.session.commit()
-       # messagebox.showinfo("MRINQ", "ADDED SUCCESSFULLY !!")   
+        wx.MessageBox('ADDED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
     elif request.method == 'POST':
         print('')
     return render_template('insert.html',form=form)
@@ -245,13 +247,11 @@ def smpn():
         pd=form.mpn.data
         result=partdata.query.filter_by(mpn=pd).first()
         if result:
-            print('hello')
+            print('')
         else:
-            print('') 
-            messagebox.showinfo("Title", "MPN DOESNT EXIST")       
+            wx.MessageBox('MPN DOESNT EXIST', 'MrinQ', wx.OK | wx.ICON_INFORMATION)     
     elif request.method == 'POST':
-        print('hello world')
-        q
+        print('')
     return render_template('searchmpn.html',form=form,nd=result)
 
 @app.route('/srcattrib',methods=['GET','POST'])
@@ -265,10 +265,9 @@ def sattrib():
             print('')
            # messagebox.showinfo("MRINQ", "DATA AVAILABLE")
         else:
-            print('')
-           # messagebox.showinfo("MRINQ", "PRODUCT DOESNT EXIST !")
+            wx.MessageBox('PRODUCT DOESNT EXIST !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
     elif request.method == 'POST':
-        print('hello world')
+        print('')
         
     return render_template('srcattrib.html',form=form,nd=result)
 
@@ -277,11 +276,9 @@ def srcall():
     result=[]
     result=partdata.query.filter_by().all()
     if result:
-        print('')
-        #messagebox.showinfo("MRINQ", "data displayed successfully !")
+        wx.MessageBox('DATA DISPLAYED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
     else:
-        print('')
-       # messagebox.showinfo("MRINQ", "database empty !")
+        wx.MessageBox('DATABASE EMPTY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
     return render_template('searchall.html',nd=result)
 
         
@@ -298,10 +295,9 @@ def impn():
             sums=no+result.quantity
             result.quantity=sums
             db.session.commit()
-         #   messagebox.showinfo("MRINQ", "DATA ADDED SUCCESSFULLY !")
+            wx.MessageBox('DATA ADDED SUCCESSFULLY !', 'MrinQ', wx.OK | wx.ICON_INFORMATION)
         else:
-            print('')
-           # messagebox.showinfo("MRINQ", "MPN doesnt EXIST")    
+            wx.MessageBox('MPN doesnt EXIST', 'MrinQ', wx.OK | wx.ICON_INFORMATION)   
     elif request.method == 'POST':
         hello=''   
     return render_template('insertmpn.html',form=form)
