@@ -14,7 +14,12 @@
             {% from "includes/_formhelpers.html" import render_field %}
     
             <center>
-              <h1>DATA IMPORTED SUCCESSFULLY !!!</h1>
+              <form method='POST' action="">
+                <div class='form-group'>                     
+                     {{render_field(form.pathname1,class_="form-control")}}                                   
+                        </div>   
+                        <center><input type="submit"  class="btn btn-primary" name="" value="Submit"> </center>
+                        </form>  
             </center> 
         
    

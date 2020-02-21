@@ -7,7 +7,6 @@ import psycopg2
 from wtforms import Form,StringField,validators,SelectField,IntegerField,FloatField,PasswordField
 import xlrd
 from tkinter import messagebox
-
 import wx
 
 
@@ -129,44 +128,43 @@ def regd():
 
 @app.route('/importa',methods=['GET','POST'])
 def imp():
-    frame = wx.Frame(None, -1, 'win.py')
-    frame.SetDimensions(0,0,200,50)
-    filename=wx.FileSelector("Choose a file to open")
-    print(filename)
-    workbook=xlrd.open_workbook(filename)
-    sheet=workbook.sheet_by_index(0)
-    for r in range(1,sheet.nrows):
-        result=partdata.query.filter_by(mpn=sheet.cell(r,1).value).first()
-        if result:
-            result.quantity=result.quantity+ int(sheet.cell(r,7).value)
-            db.session.commit()
-        else:
-            me=partdata(sheet.cell(r,0).value,sheet.cell(r,1).value,sheet.cell(r,5).value,sheet.cell(r,7).value,sheet.cell(r,9).value,sheet.cell(r,10).value)
-            db.session.add(me)     
-            db.session.commit()
-    wx.MessageBox('LCSC FILE IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)      
-    return render_template('importa.html')
+    form=PathForm(request.form)
+    if request.method=='POST' and form.validate():
+        filename=form.pathname.data
+        workbook=xlrd.open_workbook(filename)
+        sheet=workbook.sheet_by_index(0)
+        for r in range(1,sheet.nrows):
+            result=partdata.query.filter_by(mpn=sheet.cell(r,1).value).first()
+            if result:
+                result.quantity=result.quantity+ int(sheet.cell(r,7).value)
+                db.session.commit()
+            else:
+                me=partdata(sheet.cell(r,0).value,sheet.cell(r,1).value,sheet.cell(r,5).value,sheet.cell(r,7).value,sheet.cell(r,9).value,sheet.cell(r,10).value)
+                db.session.add(me)     
+                db.session.commit()
+        wx.MessageBox('LCSC FILE IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION)      
+    return render_template('importa.html',form=form)
 
 @app.route('/importb',methods=['GET','POST'])
 def imp1():
-    frame = wx.Frame(None, -1, 'win.py')
-    frame.SetDimensions(0,0,200,50)
-    filename=wx.FileSelector("Choose a file to open")
-    print(filename)
-    workbook=xlrd.open_workbook(filename)
-    sheet=workbook.sheet_by_index(0) 
-    for r in range(1,sheet.nrows):
-        result=partdata.query.filter_by(mpn=sheet.cell(r,3).value).first()
-        if result:
-            result.quantity=result.quantity+ int(sheet.cell(r,1).value)
-            db.session.commit()
-        else:
-            temp=int(sheet.cell(r,1).value)
-            me=partdata(sheet.cell(r,2).value,sheet.cell(r,3).value,sheet.cell(r,4).value,temp,sheet.cell(r,7).value,sheet.cell(r,8).value)
-            db.session.add(me)     
-            db.session.commit()
-    wx.MessageBox('DIGIKEY FILE IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION) 
-    return render_template('importb.html')
+    form=PathForm1(request.form)
+    if request.method=='POST' and form.validate():
+        filename=form.pathname1.data
+        workbook=xlrd.open_workbook(filename)
+        sheet=workbook.sheet_by_index(0) 
+        for r in range(1,sheet.nrows):
+            result=partdata.query.filter_by(mpn=sheet.cell(r,3).value).first()
+            if result:
+
+                result.quantity=result.quantity+ int(sheet.cell(r,1).value)
+                db.session.commit()
+            else:
+                temp=int(sheet.cell(r,1).value)
+                me=partdata(sheet.cell(r,2).value,sheet.cell(r,3).value,sheet.cell(r,4).value,temp,sheet.cell(r,7).value,sheet.cell(r,8).value)
+                db.session.add(me)     
+                db.session.commit()
+        wx.MessageBox('DIGIKEY FILE IMPORTED SUCCESSFULLY !!', 'MrinQ', wx.OK | wx.ICON_INFORMATION) 
+    return render_template('importb.html',form=form)
 
 @app.route('/exporta',methods=['GET','POST'])
 def exp():

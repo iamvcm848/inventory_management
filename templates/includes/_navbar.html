@@ -3,14 +3,39 @@
     <li class="nav-item active">
       <a class="nav-link" href="/dashboard">Mrinq Technology</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/search">SEARCH</a>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Search
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item"  onclick="myFunction()">by MPN</a>
+        <a class="dropdown-item" onclick="myFunction1()">by ATTRIBUTES</a>
+      
+      </div>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/insertmenu">INSERT</a>
+    
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Consume
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="#">Import BOM</a>
+        <a class="dropdown-item" href="#">Random part</a>
+      
+      </div>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/import">IMPORT/EXPORT</a>
     </li>
   </ul>
 </nav>
+
+<script>
+  function myFunction() {
+   window.open("searchMPN","POPUP","width=400,height=400");
+ }  
+ function myFunction1() {
+   window.open("srcattrib","POPUP","width=400,height=400");
+ }  
+
+</script>
